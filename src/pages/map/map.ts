@@ -33,8 +33,8 @@ export class MapPage {
       this.map = this.googleMaps.create('map');
       this.map.one(GoogleMapsEvent.MAP_READY).then((data:any)=>{
         //centrar mapa basado en la ubicacion
-        let myPosition: LatLng = new LatLng(41.390295, 2.154007);
-        this.map.animateCamera({target: myPosition, zoom: 10})
+        let myPosition: LatLng = new LatLng(20.5979767, -103.2626793);
+        this.map.animateCamera({target: myPosition, zoom: 15})
       })
     }).catch(err =>{
       console.log("error", err);
