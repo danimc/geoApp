@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
-import {GoogleMaps, GoogleMap, GoogleMapsEvent, LatLng} from '@ionic-native/google-maps';
+import {GoogleMaps, GoogleMap, GoogleMapsEvent, LatLng } from '@ionic-native/google-maps';
+import { Geolocation } from '@ionic-native/geolocation';
+
 /**
  * Generated class for the MapPage page.
  *
@@ -12,7 +14,7 @@ import {GoogleMaps, GoogleMap, GoogleMapsEvent, LatLng} from '@ionic-native/goog
 @Component({
   selector: 'page-map',
   templateUrl: 'map.html',
-  providers: [GoogleMaps]
+  providers: [GoogleMaps, Geolocation]
 })
 
 export class MapPage {
@@ -23,7 +25,8 @@ export class MapPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public googleMaps: GoogleMaps,
-    private platform: Platform) {
+    private platform: Platform,
+    private geolocation: Geolocation) {
 
     }
 
@@ -33,8 +36,14 @@ export class MapPage {
       this.map = this.googleMaps.create('map');
       this.map.one(GoogleMapsEvent.MAP_READY).then((data:any)=>{
         //centrar mapa basado en la ubicacion
-        let myPosition: LatLng = new LatLng(20.5979767, -103.2626793);
-        this.map.animateCamera({target: myPosition, zoom: 15})
+        this.geolocation.getCurrentPosition().then(posicion => {
+          let myPosition = new LatLng(posicion.coords.latitude, posicion.coords.longitude);
+          this.map.animateCamera({target: myPosition, zoom: 15});
+          this.map.addMarker({
+            position: myPosition,
+            title: "Tu estas Aqui"
+          });
+        })             
       })
     }).catch(err =>{
       console.log("error", err);
